@@ -19,7 +19,7 @@ const AI_CREATIVITY = "low"; // 翻译任务通常需要较低的创造力
 export default async function Command() {
   try {
     console.log("开始执行命令");
-    
+
     // 保存当前剪贴板内容
     console.log("读取当前剪贴板内容");
     const previousClipboard = await Clipboard.read();
@@ -35,8 +35,8 @@ export default async function Command() {
       console.error("复制操作失败:", error);
       throw new Error(`复制操作失败: ${error.message}`);
     }
-    
-    await new Promise(resolve => setTimeout(resolve, 500)); // 增加延迟
+
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 增加延迟
     console.log("复制操作延迟完成");
 
     // 获取选中的文本
@@ -44,7 +44,7 @@ export default async function Command() {
     const selectedText = await Clipboard.read();
     console.log("选中文本类型:", selectedText.type);
     console.log("选中文本长度:", selectedText.text?.length || 0);
-    
+
     if (!selectedText.text || selectedText.text.trim() === "") {
       console.log("未选中文本，操作终止");
       await showToast({
@@ -73,7 +73,7 @@ export default async function Command() {
     try {
       processedText = await AI.ask(prompt, {
         model: AI_MODEL,
-        creativity: AI_CREATIVITY
+        creativity: AI_CREATIVITY,
       });
       console.log("AI API调用成功");
       console.log("处理结果长度:", processedText.length);
@@ -116,7 +116,7 @@ export default async function Command() {
   } catch (error) {
     console.error("发生错误:", error);
     console.error("错误堆栈:", error.stack);
-    
+
     await showToast({
       style: Toast.Style.Failure,
       title: `${PROCESSING_MODE}失败`,

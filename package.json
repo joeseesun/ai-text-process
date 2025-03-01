@@ -3,8 +3,9 @@
   "name": "ai-translator",
   "title": "AI Translator",
   "description": "智能双向翻译工具，自动识别中英文并进行精准翻译",
-  "icon": "command-icon.png",
-  "author": "向阳乔木",
+  "icon": "./command-icon.png",
+  "author": "joeseesun",
+  "authorURL": "https://twitter.com/vista8",
   "categories": [
     "Productivity",
     "Developer Tools"

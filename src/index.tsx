@@ -24,11 +24,11 @@ export default async function Command() {
 
     // 模拟复制操作（假设文本已经被选中）
     await execPromise('osascript -e \'tell application "System Events" to keystroke "c" using command down\'');
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // 获取选中的文本
     const selectedText = await Clipboard.read();
-    
+
     if (!selectedText.text || selectedText.text.trim() === "") {
       await showToast({
         style: Toast.Style.Failure,
@@ -61,7 +61,6 @@ export default async function Command() {
     setTimeout(async () => {
       await Clipboard.paste(previousClipboard);
     }, 800);
-
   } catch (error) {
     console.error(error);
     await showToast({
