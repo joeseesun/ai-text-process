@@ -5,7 +5,7 @@ import { promisify } from "util";
 const execPromise = promisify(exec);
 
 // ===== 在这里修改AI提示词 =====
-const AI_PROMPT = `将以下文本翻译成英文，保持原始格式。如果文本是英文，则翻译成地道的中文：
+const AI_PROMPT = `将以下文本翻译成英文，保持原始格式，不要做任何解释。如果文本是英文，则翻译成地道的中文：
 
 {text}`;
 
