@@ -1,31 +1,30 @@
-import { AI, Clipboard, showHUD, showToast, Toast, getPreferenceValues } from "@raycast/api";
+import { AI, Clipboard, showHUD, showToast, Toast } from "@raycast/api";
 import { exec } from "child_process";
 import { promisify } from "util";
 
 const execPromise = promisify(exec);
 
-// 定义插件首选项类型（如果您还没有设置首选项，可以先注释掉这部分）
-// interface Preferences {
-//   targetLanguage: string;
-// }
+// ===== 在这里修改AI提示词 =====
+// 您可以根据需要修改这个提示词，例如：
+// - 翻译：将以下文本翻译成英文，保持原始格式
+// - 总结：总结以下文本的主要内容和关键点
+// - 改写：改写以下文本，使其更加清晰和专业
+// - 解释代码：解释以下代码的功能和工作原理
+const AI_PROMPT = `将以下文本翻译成英文，保持原始格式：
 
-export default async function AITextAutomation() {
+{text}`;
+
+// 处理模式的显示名称（用于显示在HUD中）
+const PROCESSING_MODE = "翻译";
+
+export default async function Command() {
   try {
-    // 如果您设置了首选项，可以取消下面两行的注释
-    // const preferences = getPreferenceValues<Preferences>();
-    // const targetLanguage = preferences.targetLanguage || "英语";
-    
-    // 使用固定的目标语言（您可以稍后添加首选项）
-    const targetLanguage = "英语";
-
-    // 保存当前剪贴板内容，以便稍后恢复
+    // 保存当前剪贴板内容
     const previousClipboard = await Clipboard.read();
 
-    // 模拟 Cmd+A (全选) 然后 Cmd+C (复制)
-    await execPromise('osascript -e \'tell application "System Events" to keystroke "a" using command down\'');
-    await new Promise(resolve => setTimeout(resolve, 100)); // 短暂延迟确保全选完成
+    // 模拟复制操作（假设文本已经被选中）
     await execPromise('osascript -e \'tell application "System Events" to keystroke "c" using command down\'');
-    await new Promise(resolve => setTimeout(resolve, 100)); // 短暂延迟确保复制完成
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     // 获取选中的文本
     const selectedText = await Clipboard.read();
@@ -34,39 +33,40 @@ export default async function AITextAutomation() {
       await showToast({
         style: Toast.Style.Failure,
         title: "未选中文本",
-        message: "请确保有文本被选中",
+        message: "请先选中要处理的文本",
       });
-      // 恢复原始剪贴板
       await Clipboard.paste(previousClipboard);
       return;
     }
 
     // 显示处理中提示
-    await showHUD("正在翻译...");
+    await showHUD(`正在${PROCESSING_MODE}...`);
 
-    // 使用 AI API 处理文本
-    const prompt = `将以下文本翻译成${targetLanguage}，保持原始格式：\n\n${selectedText.text}`;
-    const translatedText = await AI.ask(prompt);
+    // 准备AI提示词
+    const prompt = AI_PROMPT.replace("{text}", selectedText.text);
 
-    // 将翻译后的文本复制到剪贴板
-    await Clipboard.copy(translatedText);
+    // 调用AI API
+    const processedText = await AI.ask(prompt);
 
-    // 模拟 Cmd+V (粘贴) 替换原文本
+    // 将处理后的文本复制到剪贴板
+    await Clipboard.copy(processedText);
+
+    // 模拟粘贴
     await execPromise('osascript -e \'tell application "System Events" to keystroke "v" using command down\'');
 
     // 显示成功提示
-    await showHUD("翻译完成");
+    await showHUD(`${PROCESSING_MODE}完成`);
 
     // 延迟后恢复原始剪贴板内容
     setTimeout(async () => {
       await Clipboard.paste(previousClipboard);
-    }, 500);
+    }, 800);
 
   } catch (error) {
     console.error(error);
     await showToast({
       style: Toast.Style.Failure,
-      title: "翻译失败",
+      title: `${PROCESSING_MODE}失败`,
       message: String(error),
     });
   }

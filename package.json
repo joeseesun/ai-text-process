@@ -1,19 +1,20 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "ai-text-process",
-  "title": "AI-Text-Process",
-  "description": "",
-  "icon": "extension-icon.png",
-  "author": "joeseesun",
+  "name": "ai-translator",
+  "title": "AI Translator",
+  "description": "智能双向翻译工具，自动识别中英文并进行精准翻译",
+  "icon": "command-icon.png",
+  "author": "向阳乔木",
   "categories": [
-    "Productivity"
+    "Productivity",
+    "Developer Tools"
   ],
   "license": "MIT",
   "commands": [
     {
       "name": "ai-text-automation",
-      "title": "ai_text_automation",
-      "description": "",
+      "title": "AI Translator",
+      "description": "使用AI自动翻译选中的文本",
       "mode": "no-view"
     }
   ],
@@ -34,10 +35,6 @@
     "dev": "ray develop",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
-    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
     "publish": "npx @raycast/api@latest publish"
-  },
-  "version": "1.0.0",
-  "main": "index.js",
-  "keywords": []
+  }
 }
